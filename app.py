@@ -3,41 +3,11 @@ import json
 import zipfile
 import os
 import tempfile
+from downloader import download_from_json, download_file
+from download_router import download_url
 
 from downloader import download_from_json
 
-st.markdown(
-    """
-    <style>
-
-    /* Entire browser page */
-    html, body, [data-testid="stApp"] {
-        background-color: #0e1117;
-    }
-
-
-    /* Main Streamlit container */
-    [data-testid="stAppViewContainer"] {
-        background-color: #0e1117;
-    }
-
-
-    /* Bottom area when scrolling */
-    [data-testid="stBottomBlockContainer"] {
-        background-color: #0e1117;
-    }
-
-
-    /* Header */
-    [data-testid="stHeader"] {
-        background-color: #0e1117;
-    }
-
-
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 st.set_page_config(
     page_title="Gifs Downloader",
