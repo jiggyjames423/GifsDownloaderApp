@@ -147,44 +147,29 @@ else:
     )
 
 
-    if st.button("Enter Links"):
+    if link_text.strip():
 
-        if link_text.strip():
-
-            raw_links = (
-                link_text
-                .replace(",", "\n")
-                .splitlines()
-            )
+        raw_links = (
+            link_text
+            .replace(",", "\n")
+            .splitlines()
+        )
 
 
-            links = []
-            invalid_links = []
+        link_data = []
+        invalid_links = []
 
 
-            for link in raw_links:
+        for index, link in enumerate(raw_links):
 
-                link = link.strip()
-
-
-                if not link:
-                    continue
+            link = link.strip()
 
 
-                if is_valid_url(link):
-
-                    links.append(link)
-
-                else:
-
-                    invalid_links.append(link)
+            if not link:
+                continue
 
 
-
-            link_data = []
-
-
-            for index, link in enumerate(links):
+            if is_valid_url(link):
 
                 link_data.append(
                     {
@@ -197,32 +182,27 @@ else:
                     }
                 )
 
+            else:
 
-            st.session_state["link_data"] = link_data
+                invalid_links.append(link)
 
+
+
+        data = link_data
+
+
+        if data:
 
             st.success(
-                f"Found {len(link_data)} valid links"
+                f"Found {len(data)} valid links"
             )
 
 
-            if invalid_links:
-
-                st.warning(
-                    f"{len(invalid_links)} invalid links removed."
-                )
-
-
-        else:
+        if invalid_links:
 
             st.warning(
-                "Please enter at least one link."
+                f"{len(invalid_links)} invalid links removed."
             )
-
-
-    if "link_data" in st.session_state:
-
-        data = st.session_state["link_data"]
 
 
 
@@ -298,20 +278,23 @@ if data:
 
                     st.subheader("Preview")
 
-                    # Create rows of 3 videos
+
                     for i in range(0, len(files), 3):
 
                         cols = st.columns(3)
 
+
                         for j, col in enumerate(cols):
 
                             index = i + j
+
 
                             if index < len(files):
 
                                 with col:
 
                                     st.video(files[index])
+
 
 
         st.success(
