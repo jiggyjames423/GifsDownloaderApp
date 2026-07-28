@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 
-st.title("⬇️ Gifs Downloader plzzz")
+st.title("⬇️ Gifs Downloader!")
 
 st.write(
     "Upload a JSON file or paste video links."
