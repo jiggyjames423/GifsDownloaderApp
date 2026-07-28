@@ -3,7 +3,6 @@ import json
 import zipfile
 import os
 import tempfile
-from downloader import download_from_json, download_file
 
 from downloader import download_from_json
 
@@ -20,9 +19,6 @@ st.write(
     "Upload a JSON file or paste video links."
 )
 
-is_mobile = st.checkbox(
-    "📱 I am using a phone (download videos directly instead of ZIP)"
-)
 
 # -------------------------
 # URL validation
@@ -268,45 +264,43 @@ if data:
                     update_progress
                 )
 
-                if is_mobile and len(files) == 1:
 
-                    with open(files[0], "rb") as file:
-
-                        download_data = file.read()
-
-                    download_name = os.path.basename(files[0])
-                    download_type = "video/mp4"
+                zip_path = os.path.join(
+                    temp_folder,
+                    "downloads.zip"
+                )
 
 
-                else:
+                with zipfile.ZipFile(
+                    zip_path,
+                    "w"
+                ) as zip_file:
 
-                    zip_path = os.path.join(
-                        temp_folder,
-                        "downloads.zip"
-                    )
+                    for file in files:
 
-
-                    with zipfile.ZipFile(
-                        zip_path,
-                        "w"
-                    ) as zip_file:
-
-                        for file in files:
-
-                            zip_file.write(
-                                file,
-                                os.path.basename(file)
-                            )
+                        zip_file.write(
+                            file,
+                            os.path.basename(file)
+                        )
 
 
-                    with open(zip_path, "rb") as file:
+                with open(zip_path, "rb") as file:
 
-                        download_data = file.read()
+                    zip_data = file.read()
 
-                    download_name = "downloads.zip"
-                    download_type = "application/zip"
 
-                
+
+                # =========================
+                # Video previews
+                # =========================
+
+                if files:
+
+                    st.subheader("Preview")
+
+                    for file in files:
+
+                        st.video(file)
 
 
 
@@ -337,29 +331,9 @@ if data:
             )
 
 
-        if is_mobile and len(files) == 1:
-
-            st.subheader("Preview")
-
-            # Display video preview
-            st.video(download_data)
-
-
-            st.download_button(
-                label="📱 Save Video",
-                data=download_data,
-                file_name=download_name,
-                mime="video/mp4"
-            )
-
-
-        else:
-
-            st.download_button(
-                label="⬇️ Download ZIP",
-                data=download_data,
-                file_name=download_name,
-                mime=download_type
-            )
-
-       
+        st.download_button(
+            label="⬇️ Download ZIP",
+            data=zip_data,
+            file_name="downloads.zip",
+            mime="application/zip"
+        )
