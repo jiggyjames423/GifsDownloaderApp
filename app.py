@@ -342,18 +342,13 @@ if data:
             st.subheader("Preview")
 
             # Display video preview
-            st.video(files[0])
-
-
-            with open(files[0], "rb") as video_file:
-
-                video_data = video_file.read()
+            st.video(download_data)
 
 
             st.download_button(
                 label="📱 Save Video",
-                data=video_data,
-                file_name=os.path.basename(files[0]),
+                data=download_data,
+                file_name=download_name,
                 mime="video/mp4"
             )
 
