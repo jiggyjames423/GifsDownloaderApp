@@ -6,6 +6,12 @@ import tempfile
 
 from downloader import download_from_json
 
+st.markdown(
+    """
+    <meta name="theme-color" content="#0e1117">
+    """,
+    unsafe_allow_html=True
+)
 
 st.set_page_config(
     page_title="Gifs Downloader",
