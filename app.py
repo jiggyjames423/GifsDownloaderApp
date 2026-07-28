@@ -298,10 +298,20 @@ if data:
 
                     st.subheader("Preview")
 
-                    for file in files:
+                    # Create rows of 3 videos
+                    for i in range(0, len(files), 3):
 
-                        st.video(file)
+                        cols = st.columns(3)
 
+                        for j, col in enumerate(cols):
+
+                            index = i + j
+
+                            if index < len(files):
+
+                                with col:
+
+                                    st.video(files[index])
 
 
         st.success(
