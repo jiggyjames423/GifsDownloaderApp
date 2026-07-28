@@ -8,7 +8,19 @@ from downloader import download_from_json
 
 st.markdown(
     """
-    <meta name="theme-color" content="#0e1117">
+    <style>
+        html, body, [data-testid="stAppViewContainer"] {
+            background-color: #0e1117;
+        }
+
+        [data-testid="stHeader"] {
+            background-color: #0e1117;
+        }
+
+        section[data-testid="stSidebar"] {
+            background-color: #0e1117;
+        }
+    </style>
     """,
     unsafe_allow_html=True
 )
