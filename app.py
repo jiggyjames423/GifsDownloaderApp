@@ -6,24 +6,6 @@ import tempfile
 
 from downloader import download_from_json
 
-st.markdown(
-    """
-    <style>
-        html, body, [data-testid="stAppViewContainer"] {
-            background-color: #0e1117;
-        }
-
-        [data-testid="stHeader"] {
-            background-color: #0e1117;
-        }
-
-        section[data-testid="stSidebar"] {
-            background-color: #0e1117;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 st.set_page_config(
     page_title="Gifs Downloader",
@@ -31,7 +13,7 @@ st.set_page_config(
 )
 
 
-st.title("⬇️ Gifs Downloader plz")
+st.title("⬇️ Gifs Downloader work?")
 
 st.write(
     "Upload a JSON file or paste video links."
