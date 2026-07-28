@@ -337,9 +337,34 @@ if data:
             )
 
 
-        st.download_button(
-            label="⬇️ Download",
-            data=download_data,
-            file_name=download_name,
-            mime=download_type
-        )
+        if is_mobile and len(files) == 1:
+
+            st.subheader("Preview")
+
+            # Display video preview
+            st.video(files[0])
+
+
+            with open(files[0], "rb") as video_file:
+
+                video_data = video_file.read()
+
+
+            st.download_button(
+                label="📱 Save Video",
+                data=video_data,
+                file_name=os.path.basename(files[0]),
+                mime="video/mp4"
+            )
+
+
+        else:
+
+            st.download_button(
+                label="⬇️ Download ZIP",
+                data=download_data,
+                file_name=download_name,
+                mime=download_type
+            )
+
+       
