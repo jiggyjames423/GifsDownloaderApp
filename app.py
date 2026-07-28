@@ -4,7 +4,6 @@ import zipfile
 import os
 import tempfile
 from downloader import download_from_json, download_file
-from download_router import download_url
 
 from downloader import download_from_json
 
@@ -15,12 +14,15 @@ st.set_page_config(
 )
 
 
-st.title("⬇️ Gifs Downloader")
+st.title("⬇️ Gifs Downloader :)")
 
 st.write(
     "Upload a JSON file or paste video links."
 )
 
+is_mobile = st.checkbox(
+    "📱 I am using a phone (download videos directly instead of ZIP)"
+)
 
 # -------------------------
 # URL validation
@@ -266,29 +268,45 @@ if data:
                     update_progress
                 )
 
+                if is_mobile and len(files) == 1:
 
-                zip_path = os.path.join(
-                    temp_folder,
-                    "downloads.zip"
-                )
+                    with open(files[0], "rb") as file:
 
+                        download_data = file.read()
 
-                with zipfile.ZipFile(
-                    zip_path,
-                    "w"
-                ) as zip_file:
-
-                    for file in files:
-
-                        zip_file.write(
-                            file,
-                            os.path.basename(file)
-                        )
+                    download_name = os.path.basename(files[0])
+                    download_type = "video/mp4"
 
 
-                with open(zip_path, "rb") as file:
+                else:
 
-                    zip_data = file.read()
+                    zip_path = os.path.join(
+                        temp_folder,
+                        "downloads.zip"
+                    )
+
+
+                    with zipfile.ZipFile(
+                        zip_path,
+                        "w"
+                    ) as zip_file:
+
+                        for file in files:
+
+                            zip_file.write(
+                                file,
+                                os.path.basename(file)
+                            )
+
+
+                    with open(zip_path, "rb") as file:
+
+                        download_data = file.read()
+
+                    download_name = "downloads.zip"
+                    download_type = "application/zip"
+
+                
 
 
 
@@ -320,8 +338,8 @@ if data:
 
 
         st.download_button(
-            label="⬇️ Download ZIP",
-            data=zip_data,
-            file_name="downloads.zip",
-            mime="application/zip"
+            label="⬇️ Download",
+            data=download_data,
+            file_name=download_name,
+            mime=download_type
         )

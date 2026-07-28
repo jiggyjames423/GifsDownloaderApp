@@ -1,7 +1,7 @@
 import requests
 import os
 import time
-
+from webpage_downloader import download_webpage_video
 
 def download_file(
     url,
@@ -107,19 +107,28 @@ def download_from_json(
             )
 
 
-            url = item["urls"]["hd"]
+            url = item.get("url") or item["urls"]["hd"]
 
 
-            filename = (
-                video_id + ".mp4"
-            )
+            if (
+                ".mp4" in url.lower()
+                or ".webm" in url.lower()
+            ):
 
+                filename = video_id + ".mp4"
 
-            filepath = download_file(
-                url,
-                filename,
-                folder
-            )
+                filepath = download_file(
+                    url,
+                    filename,
+                    folder
+                )
+
+            else:
+
+                filepath = download_webpage_video(
+                    url,
+                    folder
+                )
 
 
             downloaded_files.append(

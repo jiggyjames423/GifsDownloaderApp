@@ -15,7 +15,13 @@ def download_webpage_video(url, folder):
         "noplaylist": True
     }
 
-
     with yt_dlp.YoutubeDL(options) as ydl:
 
-        ydl.download([url])
+        info = ydl.extract_info(
+            url,
+            download=True
+        )
+
+        filepath = ydl.prepare_filename(info)
+
+    return filepath
