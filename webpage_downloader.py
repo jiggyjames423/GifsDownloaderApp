@@ -76,7 +76,7 @@ def download_webpage_video(
                 "%(title)s.%(ext)s"
             ),
 
-            "format": "bestaudio/best",
+            "format": "bestaudio",
 
             "noplaylist": True,
 
@@ -95,7 +95,6 @@ def download_webpage_video(
             "extractor_args": {
                 "youtube": {
                     "player_client": [
-                        "web",
                         "android"
                     ]
                 }
@@ -152,5 +151,5 @@ def download_webpage_video(
         if audio_only:
 
             filepath = os.path.splitext(filepath)[0] + ".mp3"
-            
+
     return filepath
