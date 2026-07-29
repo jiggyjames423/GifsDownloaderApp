@@ -73,13 +73,14 @@ def download_webpage_video(
             "%(title)s.%(ext)s"
         ),
 
-        "format": "best[ext=mp4]/best",
+        #"format": "best[ext=mp4]/best",
+        "format": "best",
 
         "merge_output_format": "mp4",
 
         "noplaylist": True,
 
-        "impersonate": "chrome",
+        #"impersonate": "chrome",
 
         "js_runtimes": {
             "deno": {}
@@ -88,8 +89,9 @@ def download_webpage_video(
         "extractor_args": {
             "youtube": {
                 "player_client": [
-                    "web",
-                    "android"
+                    #"web",
+                    #"android"
+                    "tv"
                 ]
             }
         },
