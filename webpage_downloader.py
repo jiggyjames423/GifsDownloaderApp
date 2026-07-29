@@ -1,6 +1,27 @@
 import os
 import yt_dlp
+import shutil
 
+def ensure_deno():
+
+    if shutil.which("deno"):
+        return
+
+    subprocess.run(
+        [
+            "bash",
+            "-c",
+            "curl -fsSL https://deno.land/install.sh | sh"
+        ],
+        check=True
+    )
+
+    os.environ["PATH"] += ":" + os.path.expanduser(
+        "~/.deno/bin"
+    )
+
+
+ensure_deno()
 
 def download_webpage_video(
     url,
