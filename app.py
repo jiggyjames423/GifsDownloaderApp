@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 
-st.title("⬇️ Gifs Downloader!")
+st.title("⬇️ Gifs Downloader")
 
 st.write(
     "Upload a JSON file or paste video links."
@@ -56,6 +56,7 @@ input_method = st.radio(
 
 
 data = None
+preview_count = 3
 
 
 
@@ -198,6 +199,14 @@ else:
             )
 
 
+            preview_count = st.slider(
+                "Number of previews to show:",
+                min_value=1,
+                max_value=len(data),
+                value=min(3, len(data))
+            )
+
+
         if invalid_links:
 
             st.warning(
@@ -215,8 +224,10 @@ if data:
     if st.button("Start Download"):
 
         progress_bar = st.progress(0)
-
         status_text = st.empty()
+
+        file_progress = st.progress(0)
+        file_status = st.empty()
 
 
         def update_progress(done, total):
@@ -234,14 +245,43 @@ if data:
             )
 
 
+        def update_file_progress(
+            downloaded,
+            total,
+            filename
+        ):
+
+            if total <= 0:
+                return
+
+            percentage = int(
+                downloaded / total * 100
+            )
+
+            file_progress.progress(
+                percentage
+            )
+
+            file_status.write(
+                f"Current file: **{filename}**\n\n"
+                f"{percentage}% "
+                f"({downloaded / 1024 / 1024:.1f} MB / "
+                f"{total / 1024 / 1024:.1f} MB)"
+            )
+
+
         with tempfile.TemporaryDirectory() as temp_folder:
 
             with st.spinner("Downloading files..."):
 
+                file_progress.progress(0)
+                file_status.write("Preparing download...")
+
                 files, failed_files = download_from_json(
                     data,
                     temp_folder,
-                    update_progress
+                    progress_callback=update_progress,
+                    file_progress_callback=update_file_progress
                 )
 
 
@@ -291,6 +331,11 @@ if data:
 
 
 
+                # Show completed
+                file_progress.progress(100)
+                file_status.write("Current file: ✅ Complete")
+
+
                 # =========================
                 # Video previews
                 # =========================
@@ -300,7 +345,10 @@ if data:
                     st.subheader("Preview")
 
 
-                    for i in range(0, len(files), 3):
+                    preview_files = files[:preview_count]
+
+
+                    for i in range(0, len(preview_files), 3):
 
                         cols = st.columns(3)
 
@@ -310,11 +358,13 @@ if data:
                             index = i + j
 
 
-                            if index < len(files):
+                            if index < len(preview_files):
 
                                 with col:
 
-                                    st.video(files[index])
+                                    st.video(
+                                        preview_files[index]
+                                    )
 
 
 

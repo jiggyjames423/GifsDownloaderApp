@@ -1,12 +1,15 @@
 import requests
 import os
 import time
+
 from webpage_downloader import download_webpage_video
+
 
 def download_file(
     url,
     filename,
     folder,
+    progress_callback=None,
     retries=3
 ):
 
@@ -26,17 +29,44 @@ def download_file(
 
             response = requests.get(
                 url,
+                stream=True,
                 timeout=60
             )
 
             response.raise_for_status()
 
+            total_size = int(
+                response.headers.get(
+                    "content-length",
+                    0
+                )
+            )
+
+            downloaded = 0
 
             with open(filepath, "wb") as file:
 
-                file.write(
-                    response.content
-                )
+                for chunk in response.iter_content(
+                    chunk_size=1024 * 64
+                ):
+
+                    if not chunk:
+                        continue
+
+                    file.write(chunk)
+
+                    downloaded += len(chunk)
+
+                    if (
+                        progress_callback
+                        and total_size > 0
+                    ):
+
+                        progress_callback(
+                            downloaded,
+                            total_size,
+                            filename
+                        )
 
 
             return filepath
@@ -65,8 +95,8 @@ def download_file(
 
 
         if attempt < retries:
-            time.sleep(2)
 
+            time.sleep(2)
 
 
     raise Exception(
@@ -78,13 +108,13 @@ def download_file(
 def download_from_json(
     data,
     folder,
-    progress_callback=None
+    progress_callback=None,
+    file_progress_callback=None
 ):
 
     downloaded_files = []
 
     failed_files = []
-
 
     total = len(data)
 
@@ -92,7 +122,6 @@ def download_from_json(
 
 
     for item in data:
-
 
         try:
 
@@ -120,7 +149,8 @@ def download_from_json(
                 filepath = download_file(
                     url,
                     filename,
-                    folder
+                    folder,
+                    progress_callback=file_progress_callback
                 )
 
             else:
@@ -137,7 +167,6 @@ def download_from_json(
 
 
         except Exception as e:
-
 
             failed_files.append(
                 {
