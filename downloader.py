@@ -157,7 +157,8 @@ def download_from_json(
 
                 filepath = download_webpage_video(
                     url,
-                    folder
+                    folder,
+                    progress_callback=file_progress_callback
                 )
 
 

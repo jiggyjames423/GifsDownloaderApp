@@ -65,9 +65,14 @@ def download_webpage_video(
             download=True
         )
 
-        filepath = ydl.prepare_filename(
-            info
-        )
+        filepath = ydl.prepare_filename(info)
+
+        if not os.path.exists(filepath):
+
+            # fallback: find the downloaded file
+            for file in os.listdir(folder):
+                filepath = os.path.join(folder, file)
+                break
 
 
     return filepath
