@@ -77,14 +77,9 @@ def download_webpage_video(
 
         "merge_output_format": "mp4",
 
-        "postprocessors": [
-            {
-                "key": "FFmpegVideoConvertor",
-                "preferedformat": "mp4"
-            }
-        ],
-
         "noplaylist": True,
+
+        "impersonate": "chrome",
 
         "js_runtimes": {
             "deno": {}
