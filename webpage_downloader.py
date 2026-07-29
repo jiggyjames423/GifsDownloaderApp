@@ -95,7 +95,7 @@ def download_webpage_video(
             "extractor_args": {
                 "youtube": {
                     "player_client": [
-                        "android"
+                        "web"
                     ]
                 }
             },
