@@ -27,7 +27,8 @@ ensure_deno()
 def download_webpage_video(
     url,
     folder,
-    progress_callback=None
+    progress_callback=None,
+    audio_only=False
 ):
 
     os.makedirs(folder, exist_ok=True)
@@ -67,41 +68,75 @@ def download_webpage_video(
                 )
 
 
-    options = {
-        "outtmpl": os.path.join(
-            folder,
-            "%(title)s.%(ext)s"
-        ),
+    if audio_only:
 
-        #"format": "best[ext=mp4]/best",
-        "format": "best",
+        options = {
+            "outtmpl": os.path.join(
+                folder,
+                "%(title)s.%(ext)s"
+            ),
 
-        "merge_output_format": "mp4",
+            "format": "bestaudio/best",
 
-        "noplaylist": True,
+            "noplaylist": True,
 
-        "geo_bypass": True,
+            "postprocessors": [
+                {
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": "mp3",
+                    "preferredquality": "192"
+                }
+            ],
 
-        #"impersonate": "chrome",
+            "js_runtimes": {
+                "deno": {}
+            },
 
-        "js_runtimes": {
-            "deno": {}
-        },
+            "extractor_args": {
+                "youtube": {
+                    "player_client": [
+                        "web",
+                        "android"
+                    ]
+                }
+            },
 
-        "extractor_args": {
-            "youtube": {
-                "player_client": [
-                    "web",
-                    #"android"
-                    
-                ]
-            }
-        },
+            "progress_hooks": [
+                progress_hook
+            ]
+        }
 
-        "progress_hooks": [
-            progress_hook
-        ]
-    }
+    else:
+
+        options = {
+            "outtmpl": os.path.join(
+                folder,
+                "%(title)s.%(ext)s"
+            ),
+
+            "format": "best[ext=mp4]/best",
+
+            "merge_output_format": "mp4",
+
+            "noplaylist": True,
+
+            "js_runtimes": {
+                "deno": {}
+            },
+
+            "extractor_args": {
+                "youtube": {
+                    "player_client": [
+                        "web",
+                        "android"
+                    ]
+                }
+            },
+
+            "progress_hooks": [
+                progress_hook
+            ]
+        }
 
 
     with yt_dlp.YoutubeDL(options) as ydl:

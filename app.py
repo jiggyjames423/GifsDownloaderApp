@@ -19,7 +19,15 @@ st.write(
     "Upload a JSON file or paste video links."
 )
 
+download_type = st.selectbox(
+    "Download format:",
+    [
+        "🎥 Video",
+        "🎵 Audio (MP3)"
+    ]
+)
 
+audio_only = download_type == "🎵 Audio (MP3)"
 # -------------------------
 # URL validation
 # -------------------------
@@ -314,7 +322,8 @@ if data:
                     data,
                     temp_folder,
                     progress_callback=update_progress,
-                    file_progress_callback=update_file_progress
+                    file_progress_callback=update_file_progress,
+                    audio_only=audio_only
                 )
 
 
@@ -333,7 +342,10 @@ if data:
 
                     download_name = os.path.basename(files[0])
 
-                    download_type = "video/mp4"
+                    if audio_only:
+                        download_type = "audio/mpeg"
+                    else:
+                        download_type = "video/mp4"
 
 
 
@@ -411,9 +423,17 @@ if data:
 
                                 with col:
 
-                                    st.video(
-                                        preview_files[index]
-                                    )
+                                    if audio_only:
+
+                                        st.audio(
+                                            preview_files[index]
+                                        )
+
+                                    else:
+
+                                        st.video(
+                                            preview_files[index]
+                                        )
 
 
 

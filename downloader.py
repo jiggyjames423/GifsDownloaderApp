@@ -109,7 +109,8 @@ def download_from_json(
     data,
     folder,
     progress_callback=None,
-    file_progress_callback=None
+    file_progress_callback=None,
+    audio_only=False
 ):
 
     downloaded_files = []
@@ -158,7 +159,8 @@ def download_from_json(
                 filepath = download_webpage_video(
                     url,
                     folder,
-                    progress_callback=file_progress_callback
+                    progress_callback=file_progress_callback,
+                    audio_only=audio_only
                 )
 
 
