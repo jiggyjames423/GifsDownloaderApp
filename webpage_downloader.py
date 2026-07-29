@@ -73,7 +73,7 @@ def download_webpage_video(
             "%(title)s.%(ext)s"
         ),
 
-        "format": "bv*+ba/best",
+        "format": "best[ext=mp4]/best",
 
         "merge_output_format": "mp4",
 
@@ -93,6 +93,7 @@ def download_webpage_video(
         "extractor_args": {
             "youtube": {
                 "player_client": [
+                    "web",
                     "android"
                 ]
             }
