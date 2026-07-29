@@ -30,6 +30,7 @@ from urllib.parse import urlparse
 def is_valid_url(url):
 
     try:
+
         result = urlparse(url)
 
         return (
@@ -38,6 +39,7 @@ def is_valid_url(url):
         )
 
     except Exception:
+
         return False
 
 
@@ -167,6 +169,7 @@ else:
 
 
             if not link:
+
                 continue
 
 
@@ -199,19 +202,32 @@ else:
             )
 
 
-            preview_count = st.slider(
-                "Number of previews to show:",
-                min_value=1,
-                max_value=len(data),
-                value=min(3, len(data))
-            )
-
-
         if invalid_links:
 
             st.warning(
                 f"{len(invalid_links)} invalid links removed."
             )
+
+
+
+# =========================
+# Preview slider
+# =========================
+
+if data:
+
+    if len(data) > 1:
+
+        preview_count = st.slider(
+            "Number of previews to show:",
+            min_value=1,
+            max_value=len(data),
+            value=min(3, len(data))
+        )
+
+    else:
+
+        preview_count = 1
 
 
 
@@ -223,11 +239,16 @@ if data:
 
     if st.button("Start Download"):
 
+
         progress_bar = st.progress(0)
+
         status_text = st.empty()
 
+
         file_progress = st.progress(0)
+
         file_status = st.empty()
+
 
 
         def update_progress(done, total):
@@ -245,6 +266,7 @@ if data:
             )
 
 
+
         def update_file_progress(
             downloaded,
             total,
@@ -252,15 +274,19 @@ if data:
         ):
 
             if total <= 0:
+
                 return
+
 
             percentage = int(
                 downloaded / total * 100
             )
 
+
             file_progress.progress(
                 percentage
             )
+
 
             file_status.write(
                 f"Current file: **{filename}**\n\n"
@@ -270,12 +296,19 @@ if data:
             )
 
 
+
         with tempfile.TemporaryDirectory() as temp_folder:
+
 
             with st.spinner("Downloading files..."):
 
+
                 file_progress.progress(0)
-                file_status.write("Preparing download...")
+
+                file_status.write(
+                    "Preparing download..."
+                )
+
 
                 files, failed_files = download_from_json(
                     data,
@@ -285,11 +318,13 @@ if data:
                 )
 
 
+
                 # =========================
                 # Create download file
                 # =========================
 
                 if len(files) == 1:
+
 
                     with open(files[0], "rb") as file:
 
@@ -297,10 +332,13 @@ if data:
 
 
                     download_name = os.path.basename(files[0])
+
                     download_type = "video/mp4"
 
 
+
                 else:
+
 
                     zip_path = os.path.join(
                         temp_folder,
@@ -313,6 +351,7 @@ if data:
                         "w"
                     ) as zip_file:
 
+
                         for file in files:
 
                             zip_file.write(
@@ -321,19 +360,25 @@ if data:
                             )
 
 
+
                     with open(zip_path, "rb") as file:
 
                         download_data = file.read()
 
 
+
                     download_name = "downloads.zip"
+
                     download_type = "application/zip"
 
 
 
-                # Show completed
                 file_progress.progress(100)
-                file_status.write("Current file: ✅ Complete")
+
+                file_status.write(
+                    "Current file: ✅ Complete"
+                )
+
 
 
                 # =========================
@@ -341,6 +386,7 @@ if data:
                 # =========================
 
                 if files:
+
 
                     st.subheader("Preview")
 
@@ -350,15 +396,18 @@ if data:
 
                     for i in range(0, len(preview_files), 3):
 
+
                         cols = st.columns(3)
 
 
                         for j, col in enumerate(cols):
 
+
                             index = i + j
 
 
                             if index < len(preview_files):
+
 
                                 with col:
 
@@ -373,7 +422,9 @@ if data:
         )
 
 
+
         if failed_files:
+
 
             st.warning(
                 f"{len(failed_files)} files failed."
@@ -382,17 +433,22 @@ if data:
 
             with st.expander("See failed files"):
 
+
                 for item in failed_files:
+
 
                     st.write(
                         f"{item['id']}: {item['error']}"
                     )
 
+
         else:
+
 
             st.success(
                 "All files downloaded successfully!"
             )
+
 
 
         st.download_button(
