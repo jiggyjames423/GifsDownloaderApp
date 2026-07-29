@@ -50,8 +50,32 @@ def download_webpage_video(
             folder,
             "%(title)s.%(ext)s"
         ),
-        "format": "best",
+
+        "format": "bv*+ba/best",
+
+        "merge_output_format": "mp4",
+
+        "postprocessors": [
+            {
+                "key": "FFmpegVideoConvertor",
+                "preferedformat": "mp4"
+            }
+        ],
+
         "noplaylist": True,
+
+        "js_runtimes": {
+            "deno": {}
+        },
+
+        "extractor_args": {
+            "youtube": {
+                "player_client": [
+                    "android"
+                ]
+            }
+        },
+
         "progress_hooks": [
             progress_hook
         ]
@@ -66,13 +90,6 @@ def download_webpage_video(
         )
 
         filepath = ydl.prepare_filename(info)
-
-        if not os.path.exists(filepath):
-
-            # fallback: find the downloaded file
-            for file in os.listdir(folder):
-                filepath = os.path.join(folder, file)
-                break
 
 
     return filepath
