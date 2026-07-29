@@ -149,4 +149,8 @@ def download_webpage_video(
         filepath = ydl.prepare_filename(info)
 
 
+        if audio_only:
+
+            filepath = os.path.splitext(filepath)[0] + ".mp3"
+            
     return filepath
