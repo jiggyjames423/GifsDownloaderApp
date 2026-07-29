@@ -80,6 +80,8 @@ def download_webpage_video(
 
         "noplaylist": True,
 
+        "geo_bypass": True,
+
         #"impersonate": "chrome",
 
         "js_runtimes": {
@@ -90,7 +92,7 @@ def download_webpage_video(
             "youtube": {
                 "player_client": [
                     "web",
-                    "android"
+                    #"android"
                     
                 ]
             }
